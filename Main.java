@@ -62,17 +62,31 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Input a number- ");
+        System.out.print("Input a credit card number- ");
         long number = scanner.nextLong();
 
-        System.out.println(number+" is "+(isValid(number) ? "valid":"invalid"));
+        String answer = isValid(number) ? "valid":"invalid";
+        if (answer.equals("valid")) {
+            if (prefixMatched(number, 4))
+                System.out.println(number + " (Visa cards) is valid.");
+            else if (prefixMatched(number, 5))
+                System.out.println(number + " (Master card) is valid.");
+            else if (prefixMatched(number, 37))
+                System.out.println(number + " (American Express card) is valid.");
+            else if (prefixMatched(number, 6))
+                System.out.println(number + " (Discover card) is valid.");
+        }
+        else
+            System.out.println(number+" card is invalid.");
+
+    }
 
         //System.out.println("sum of odd places "+sumOfOddPlaces(number));
         //System.out.println("sum of even places "+sumOfDoubleEvenPlaces(number));
         //boolean a =(((sumOfOddPlaces(number)+sumOfDoubleEvenPlaces(number))%10)==0);
         //System.out.println("Is sum of odd and even places divisible by 10- "+a);
         //System.out.println("is prefix found -"+prefixMatched(number,4));
-    }
+
     public static boolean isValid(long number){
         boolean valid = (get_size(number)>=13 && get_size(number)<=16);
         boolean checksum = ((sumOfOddPlaces(number) + sumOfDoubleEvenPlaces(number)) %10 == 0);
@@ -83,7 +97,8 @@ public class Main {
     }
     public static int sumOfOddPlaces(long number){
         int sum=0;
-        for (int i=1;number>0;i+=2){
+        //for (int i=1;number>0;i+=2)
+        while (number>0){
             sum+=number%10;
             number/=100;
         }
@@ -92,13 +107,14 @@ public class Main {
     public static int sumOfDoubleEvenPlaces(long number){
         int sum=0;
         number=number/10;
-        for (int i=2;number>0;i+=2){
-            sum+=getdigit((int) (2* ( number % 10)));
+        //for (int i=2;number>0;i+=2)
+        while (number>0){
+            sum+=getDigit((int) (2* ( number % 10)));
             number/=100;
         }
         return  sum;
     }
-    public static int getdigit(int number){
+    public static int getDigit(int number){
         if (number>9)
             return (number/10) + (number%10);
         return number;
@@ -115,13 +131,13 @@ public class Main {
         return length;
     }
 
-    public static boolean prefixMatched(long number, int d){
-        return getprefix(number,get_size(d))==d;
+    public static boolean prefixMatched(long number, int prefixVar){
+        return getPrefix(number,get_size(prefixVar))==prefixVar;
     }
-    public static long getprefix(long number,int k){
-        if (get_size(number)<k)
+    public static long getPrefix(long number,int prefixSize){
+        if (get_size(number)<prefixSize)
             return number;
-        return (long)(number/Math.pow(10,(get_size(number)-k)));
+        return (long)(number/Math.pow(10,(get_size(number)-prefixSize)));
 
     }
 }
